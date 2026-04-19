@@ -1,0 +1,75 @@
+{
+    "restaurant": "Bella Cucina",
+    "menu": {
+      "pasta": [
+        {
+          "name": "Spaghetti Carbonara",
+          "description": "Паста з яйцем, сиром пармезан, беконом та чорним перцем",
+          "price": 120,
+          "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "name": "Penne Arrabbiata",
+          "description": "Гостра томатна паста з часником і перцем чилі",
+          "price": 110,
+          "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "pizza": [
+        {
+          "name": "Margherita",
+          "description": "Томатний соус, моцарела, базилік",
+          "price": 100,
+          "image": "https://images.unsplash.com/photo-1601924928376-59c1a3f0c0b0?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "name": "Quattro Formaggi",
+          "description": "Чотири види сиру: моцарела, горгонзола, пармезан, рікота",
+          "price": 130,
+          "image": "https://images.unsplash.com/photo-1548365328-8b849f6a1d2e?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "main_dishes": [
+        {
+          "name": "Lasagna",
+          "description": "Класична лазанья з м'ясом і соусом бешамель",
+          "price": 140,
+          "image": "https://images.unsplash.com/photo-1604908177522-040f1c6f2c7a?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "name": "Chicken Parmigiana",
+          "description": "Куряче філе з томатним соусом і сиром пармезан",
+          "price": 150,
+          "image": "https://images.unsplash.com/photo-1617196038435-2f3c6f9b8b87?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Tiramisu",
+          "description": "Десерт з кавою, маскарпоне та печивом савоярді",
+          "price": 80,
+          "image": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "name": "Panna Cotta",
+          "description": "Ніжний вершковий десерт з ягідним соусом",
+          "price": 75,
+          "image": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=800&q=80"
+        }
+      ],
+      "drinks": [
+        {
+          "name": "Espresso",
+          "description": "Класична італійська кава",
+          "price": 40,
+          "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          "name": "Cappuccino",
+          "description": "Кава з молоком та пінкою",
+          "price": 50,
+          "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
+        }
+      ]
+    }
+  }
