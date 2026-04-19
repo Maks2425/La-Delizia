@@ -98,3 +98,7 @@ def login():
             flash('Неправильний nickname або пароль!', 'danger')
 
     return render_template('login.html', csrf_token=session["csrf_token"])
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
