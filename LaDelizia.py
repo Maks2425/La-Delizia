@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 
 from flask_login import login_required, current_user, login_user, logout_user # pip install flask-login
 
@@ -8,6 +8,8 @@ from datetime import datetime
 
 import os
 import uuid
+import json
+import random
 
 import secrets
 
@@ -55,7 +57,67 @@ def home():
     if "csrf_token" not in session:
         session["csrf_token"] = secrets.token_hex(16)
 
-    return render_template('home.html')
+    dishes = load_dishes_from_json()
+    reviews = generate_random_reviews(6)
+
+    return render_template(
+        'home.html',
+        dishes=dishes,
+        reviews=reviews
+    )
+
+
+def load_dishes_from_json():
+    with open('menu.json', 'r', encoding='utf-8') as file:
+        menu_data = json.load(file)
+
+    dishes = []
+    categories = menu_data.get('menu', {})
+
+    for category_items in categories.values():
+        for dish in category_items:
+            dishes.append(
+                {
+                    "name": dish.get("name", "Dish"),
+                    "description": dish.get("description", ""),
+                    "price": dish.get("price", 0),
+                    "image": dish.get("image", "")
+                }
+            )
+
+    return dishes
+
+
+def generate_random_reviews(count):
+    names = [
+        "Олександр", "Софія", "Андрій", "Валерія", "Ігор",
+        "Марія", "Дмитро", "Аліна", "Максим", "Катерина"
+    ]
+    texts = [
+        "Неймовірна атмосфера та сервіс.",
+        "Страви подані бездоганно, смак на найвищому рівні.",
+        "Ідеальне місце для вечері удвох.",
+        "Преміум-ресторан, куди хочеться повернутися.",
+        "Вишукана кухня та дуже уважний персонал.",
+        "Справді дорогий і стильний заклад.",
+        "Одна з найкращих італійських кухонь, що пробував.",
+        "Естетика, смак і комфорт в одному місці."
+    ]
+
+    reviews = []
+    for _ in range(count):
+        reviews.append(
+            {
+                "name": random.choice(names),
+                "text": random.choice(texts)
+            }
+        )
+    return reviews
+
+
+@app.route('/pic.png')
+def restaurant_image():
+    return send_file('pic.png', mimetype='image/png')
 
 @app.route("/register", methods = ['GET','POST'])
 def register():
@@ -98,6 +160,13 @@ def login():
             flash('Неправильний nickname або пароль!', 'danger')
 
     return render_template('login.html', csrf_token=session["csrf_token"])
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":

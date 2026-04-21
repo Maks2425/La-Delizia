@@ -1,0 +1,240 @@
+:root {
+    --bg: #0b0b0b;
+    --panel: #131313;
+    --gold: #cba45d;
+    --gold-soft: #9a7a43;
+    --text: #f5f0e6;
+    --muted: #c5b89f;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(11, 11, 11, 0.96);
+    border-bottom: 1px solid var(--gold-soft);
+    padding: 14px 20px;
+}
+
+.desktop-nav {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 34px;
+}
+
+.desktop-nav a {
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.desktop-nav .brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.menu-toggle {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+.mobile-nav {
+    display: none;
+    background: #101010;
+    border-bottom: 1px solid var(--gold-soft);
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mobile-nav.open {
+    display: flex;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 18px;
+}
+
+.left-column {
+    display: grid;
+    gap: 18px;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid #2d2416;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.panel h2 {
+    color: var(--gold);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+}
+
+.reviews-list {
+    display: grid;
+    gap: 10px;
+}
+
+.review-card {
+    border: 1px solid #2a2217;
+    border-radius: 10px;
+    padding: 10px;
+    background: #101010;
+}
+
+.review-card h3 {
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.review-card p {
+    color: var(--muted);
+    font-size: 0.94rem;
+}
+
+.dishes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-height: 430px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.dish-card {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    border: 1px solid #2a2217;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #101010;
+}
+
+.dish-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dish-content {
+    padding: 10px;
+}
+
+.dish-content h3 {
+    margin-bottom: 5px;
+    color: var(--text);
+}
+
+.dish-content p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.price {
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.main-photo img {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid var(--gold-soft);
+    min-height: 320px;
+    object-fit: cover;
+}
+
+.info-sections {
+    display: grid;
+    gap: 14px;
+    padding: 0 18px 24px;
+}
+
+.info-card p {
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.booking-btn {
+    display: inline-block;
+    margin-top: 12px;
+    border: 1px solid var(--gold);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.mobile-footer {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+    background: rgba(10, 10, 10, 0.98);
+    border-top: 1px solid var(--gold-soft);
+}
+
+@media (min-width: 992px) {
+    .menu-toggle,
+    .mobile-nav,
+    .mobile-footer {
+        display: none;
+    }
+
+    .desktop-nav {
+        display: flex;
+    }
+
+    .layout {
+        grid-template-columns: minmax(350px, 38%) minmax(560px, 1fr);
+        padding: 24px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .dishes-grid {
+        max-height: 280px;
+    }
+
+    .main-photo img {
+        min-height: 700px;
+    }
+
+    .info-sections {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        padding: 0 24px 24px;
+    }
+}

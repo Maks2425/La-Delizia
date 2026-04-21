@@ -2,10 +2,86 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Головна</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaDelizia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
-<h1>Вітаємо у нашому ресторані!</h1>
-<a href="/login">Вхід</a> | <a href="/register">Реєстрація</a>
+<header class="topbar">
+    <button class="menu-toggle" id="menuToggle">МЕНЮ</button>
+    <nav class="desktop-nav">
+        <a href="#menu">МЕНЮ</a>
+        <a href="#booking">БРОНЮВАННЯ</a>
+        <a href="#home" class="brand">LaDelizia</a>
+        <a href="#about">ПРО НАС</a>
+        <a href="/logout">ВИЙТИ</a>
+    </nav>
+</header>
+
+<nav class="mobile-nav" id="mobileNav">
+    <a href="#menu">МЕНЮ</a>
+    <a href="#booking">БРОНЮВАННЯ</a>
+    <a href="#about">ПРО НАС</a>
+    <a href="/logout">ВИЙТИ</a>
+</nav>
+
+<main class="layout" id="home">
+    <section class="left-column">
+        <article class="panel reviews">
+            <h2>Відгуки</h2>
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <h3>{{ review.name }}</h3>
+                    <p>{{ review.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="panel dishes" id="menu">
+            <h2>Фото страв</h2>
+            <div class="dishes-grid">
+                {% for dish in dishes %}
+                <div class="dish-card">
+                    <img src="{{ dish.image }}" alt="{{ dish.name }}">
+                    <div class="dish-content">
+                        <h3>{{ dish.name }}</h3>
+                        <p>{{ dish.description }}</p>
+                        <span class="price">{{ dish.price }} грн</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </section>
+
+    <section class="main-photo">
+        <img src="/pic.png" alt="LaDelizia Restaurant">
+    </section>
+</main>
+
+<footer class="mobile-footer">
+    <a href="#about">Про нас</a>
+    <a href="#booking">Бронювання</a>
+</footer>
+
+<section class="info-sections">
+    <article id="about" class="panel info-card">
+        <h2>Про нас</h2>
+        <p>
+            LaDelizia - ресторан сучасної італійської кухні з акцентом на вишукану подачу,
+            преміальне обслуговування та затишну атмосферу для особливих подій.
+        </p>
+    </article>
+
+    <article id="booking" class="panel info-card">
+        <h2>Бронювання</h2>
+        <p>Забронюйте стіл заздалегідь для найкращого вечора у LaDelizia.</p>
+        <a class="booking-btn" href="/login">Забронювати</a>
+    </article>
+</section>
+
+<script src="{{ url_for('static', filename='home.js') }}"></script>
 </body>
 </html>
