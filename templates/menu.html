@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaDelizia | Меню</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+</head>
+<body>
+<header class="menu-header">
+    <a class="back-link" href="{{ url_for('home') }}">← На головну</a>
+    <h1>Меню LaDelizia</h1>
+</header>
+
+<main class="menu-layout">
+    <section class="menu-list panel">
+        {% for category in menu_categories %}
+        <article class="menu-category">
+            <h2>{{ category.title }}</h2>
+            <div class="dish-list">
+                {% set category_loop = loop %}
+                {% for dish in category.dishes %}
+                <button
+                    class="dish-item{% if loop.first and category_loop.first %} active{% endif %}"
+                    type="button"
+                    data-name="{{ dish.name }}"
+                    data-description="{{ dish.description }}"
+                    data-price="{{ dish.price }}"
+                    data-image="{{ dish.image }}"
+                >
+                    <div class="dish-item-content">
+                        <h3>{{ dish.name }}</h3>
+                        <p>{{ dish.description }}</p>
+                        <span>{{ dish.price }} грн</span>
+                    </div>
+                    <span class="dish-plus" aria-hidden="true">+</span>
+                </button>
+                {% endfor %}
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+
+    <aside class="dish-preview panel">
+        {% if menu_categories and menu_categories[0].dishes %}
+        {% set first_dish = menu_categories[0].dishes[0] %}
+        <img id="previewImage" src="{{ first_dish.image }}" alt="{{ first_dish.name }}">
+        <div class="preview-info">
+            <h2 id="previewName">{{ first_dish.name }}</h2>
+            <p id="previewDescription">{{ first_dish.description }}</p>
+            <span id="previewPrice">{{ first_dish.price }} грн</span>
+        </div>
+        {% endif %}
+    </aside>
+</main>
+
+<script src="{{ url_for('static', filename='menu.js') }}"></script>
+</body>
+</html>

@@ -10,18 +10,20 @@
 <header class="topbar">
     <button class="menu-toggle" id="menuToggle">МЕНЮ</button>
     <nav class="desktop-nav">
-        <a href="#menu">МЕНЮ</a>
+        <a href="{{ url_for('menu_page') }}">МЕНЮ</a>
         <a href="#booking">БРОНЮВАННЯ</a>
         <a href="#home" class="brand">LaDelizia</a>
         <a href="#about">ПРО НАС</a>
+        <a href="#careers">ВАКАНСІЇ</a>
         <a href="/logout">ВИЙТИ</a>
     </nav>
 </header>
 
 <nav class="mobile-nav" id="mobileNav">
-    <a href="#menu">МЕНЮ</a>
+    <a href="{{ url_for('menu_page') }}">МЕНЮ</a>
     <a href="#booking">БРОНЮВАННЯ</a>
     <a href="#about">ПРО НАС</a>
+    <a href="#careers">ВАКАНСІЇ</a>
     <a href="/logout">ВИЙТИ</a>
 </nav>
 
@@ -57,30 +59,81 @@
     </section>
 
     <section class="main-photo">
-        <img src="/pic.png" alt="LaDelizia Restaurant">
+        <img src="{{ url_for('restaurant_image') }}" alt="LaDelizia Restaurant">
     </section>
 </main>
-
-<footer class="mobile-footer">
-    <a href="#about">Про нас</a>
-    <a href="#booking">Бронювання</a>
-</footer>
-
-<section class="info-sections">
-    <article id="about" class="panel info-card">
-        <h2>Про нас</h2>
-        <p>
-            LaDelizia - ресторан сучасної італійської кухні з акцентом на вишукану подачу,
-            преміальне обслуговування та затишну атмосферу для особливих подій.
-        </p>
-    </article>
-
+<section class="info-sections booking-section">
     <article id="booking" class="panel info-card">
         <h2>Бронювання</h2>
         <p>Забронюйте стіл заздалегідь для найкращого вечора у LaDelizia.</p>
         <a class="booking-btn" href="/login">Забронювати</a>
     </article>
 </section>
+
+<section id="careers" class="careers-section panel">
+    <div class="careers-content">
+        <h2>Працювати в нас!</h2>
+        <p>
+            Якщо ти любиш сервіс, італійську кухню та роботу в дружній команді,
+            приєднуйся до LaDelizia.
+        </p>
+
+        <div class="team-groups">
+            <h3>Передній ряд (кухня)</h3>
+            <ul>
+                <li>Олександр — шеф-кухар, колись працював у 5 різних країнах.</li>
+                <li>Марко — су-шеф, обожнює експериментувати з соусами.</li>
+                <li>Ірина — кондитер, пече десерти з дитинства разом із бабусею.</li>
+                <li>Дмитро — кухар гарячого цеху, ніколи не пересолює страви.</li>
+                <li>Анна — кухар холодного цеху, завжди красиво подає страви.</li>
+                <li>Тарас — помічник кухаря, найшвидше нарізає овочі в команді.</li>
+            </ul>
+
+            <h3>Середній ряд (офіціанти)</h3>
+            <ul>
+                <li>Софія — офіціантка, пам’ятає постійних клієнтів по іменах.</li>
+                <li>Влад — офіціант, легко знаходить спільну мову з будь-ким.</li>
+                <li>Катерина — старша офіціантка, вирішує конфлікти без стресу.</li>
+                <li>Андрій — офіціант, знає меню напам’ять.</li>
+                <li>Оля — офіціантка, завжди усміхається, навіть у напружені дні.</li>
+                <li>Назар — офіціант, мріє відкрити власний ресторан.</li>
+                <li>Юлія — офіціантка, найшвидше обслуговує столики.</li>
+            </ul>
+
+            <h3>Задній ряд (адміністрація та бар)</h3>
+            <ul>
+                <li>Максим — менеджер, тримає під контролем весь ресторан.</li>
+                <li>Ліза — адміністраторка, ідеально планує бронювання.</li>
+                <li>Денис — бармен, створив фірмовий рожевий коктейль.</li>
+                <li>Аліна — хостес, завжди зустрічає гостей першою.</li>
+                <li>Богдан — бариста, варить ідеальну каву.</li>
+                <li>Вікторія — маркетолог, веде Instagram ресторану.</li>
+                <li>Роман — технічний працівник, може полагодити будь-що за 5 хвилин.</li>
+            </ul>
+        </div>
+
+        <a class="careers-btn" href="/register">Працювати в нас!</a>
+    </div>
+    <div class="careers-image">
+        <img src="{{ url_for('collective_image') }}" alt="Команда LaDelizia">
+    </div>
+</section>
+
+<section class="info-sections about-section">
+    <article id="about" class="panel info-card">
+        <h2>Про нас</h2>
+        <p>LaDelizia — сучасний ресторан італійської кухні який знаходиться в місті Івано-Франківськ вулиця Незалежності 31, де класичні рецепти поєднуються з елегантною подачею та атмосферою легкого шарму.</p>
+        <p>Інтер’єр ресторану виконаний у ніжних рожево-білих тонах із теплими золотими акцентами. М’яке освітлення, мармурові поверхні, живі квіти та оксамитові меблі створюють відчуття затишку й водночас витонченості.</p>
+        <p>Меню поєднує класичні рецепти італійської кухні та авторські страви, створені на основі найкращих традицій і нових ідей.</p>
+        <p>Ми відкриті до співпраці й нових знайомств. Якщо хочете стати частиною команди LaDelizia — звертайтесь, ми завжди раді талановитим професіоналам.</p>
+    </article>
+</section>
+
+<footer class="mobile-footer">
+    <a href="#about">Про нас</a>
+    <a href="#booking">Бронювання</a>
+    <a href="#careers">Вакансії</a>
+</footer>
 
 <script src="{{ url_for('static', filename='home.js') }}"></script>
 </body>

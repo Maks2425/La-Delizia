@@ -1,16 +1,21 @@
 :root {
-    --bg: #0b0b0b;
-    --panel: #131313;
-    --gold: #cba45d;
-    --gold-soft: #9a7a43;
-    --text: #f5f0e6;
-    --muted: #c5b89f;
+    --bg: #fdfaf6;
+    --panel: #ffffff;
+    --accent: #d1827b;
+    --accent-soft: #efc6c2;
+    --text: #3f2f2c;
+    --muted: #7d6460;
+    --line: #f0ddd7;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -21,7 +26,7 @@ body {
 }
 
 a {
-    color: var(--gold);
+    color: var(--accent);
     text-decoration: none;
 }
 
@@ -29,9 +34,10 @@ a {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(11, 11, 11, 0.96);
-    border-bottom: 1px solid var(--gold-soft);
+    background: rgba(253, 250, 246, 0.96);
+    border-bottom: 1px solid var(--line);
     padding: 14px 20px;
+    backdrop-filter: blur(8px);
 }
 
 .desktop-nav {
@@ -55,18 +61,20 @@ a {
 .menu-toggle {
     width: 100%;
     padding: 12px;
-    border: 1px solid var(--gold);
+    border: 1px solid var(--accent);
     background: transparent;
-    color: var(--gold);
+    color: var(--accent);
     font-weight: 700;
     letter-spacing: 0.08em;
     cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .mobile-nav {
     display: none;
-    background: #101010;
-    border-bottom: 1px solid var(--gold-soft);
+    background: #fff7f5;
+    border-bottom: 1px solid var(--line);
     padding: 12px 20px;
     flex-direction: column;
     gap: 10px;
@@ -90,14 +98,14 @@ a {
 
 .panel {
     background: var(--panel);
-    border: 1px solid #2d2416;
+    border: 1px solid var(--line);
     border-radius: 14px;
     padding: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 30px rgba(129, 95, 90, 0.08);
 }
 
 .panel h2 {
-    color: var(--gold);
+    color: var(--accent);
     margin-bottom: 12px;
     letter-spacing: 0.04em;
 }
@@ -108,10 +116,10 @@ a {
 }
 
 .review-card {
-    border: 1px solid #2a2217;
+    border: 1px solid #f1dfd9;
     border-radius: 10px;
     padding: 10px;
-    background: #101010;
+    background: #fff9f7;
 }
 
 .review-card h3 {
@@ -137,10 +145,10 @@ a {
     display: grid;
     grid-template-columns: 100px 1fr;
     gap: 10px;
-    border: 1px solid #2a2217;
+    border: 1px solid #f1dfd9;
     border-radius: 12px;
     overflow: hidden;
-    background: #101010;
+    background: #fff9f7;
 }
 
 .dish-card img {
@@ -165,14 +173,14 @@ a {
 }
 
 .price {
-    color: var(--gold);
+    color: var(--accent);
     font-weight: 700;
 }
 
 .main-photo img {
     width: 100%;
     border-radius: 14px;
-    border: 1px solid var(--gold-soft);
+    border: 1px solid var(--accent-soft);
     min-height: 320px;
     object-fit: cover;
 }
@@ -188,13 +196,125 @@ a {
     line-height: 1.55;
 }
 
+.info-card p + p {
+    margin-top: 12px;
+}
+
+.about-section {
+    grid-template-columns: 1fr;
+}
+
+.booking-section {
+    grid-template-columns: 1fr;
+}
+
+#about.info-card {
+    min-height: auto;
+    border-color: var(--accent-soft);
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+#about.info-card:hover {
+    box-shadow: 0 14px 34px rgba(209, 130, 123, 0.18);
+    transform: translateY(-2px);
+}
+
+#about.info-card.about-flash {
+    border-color: #ff7b6e;
+    box-shadow: 0 0 0 6px rgba(255, 123, 110, 0.45), 0 24px 50px rgba(255, 123, 110, 0.35);
+    animation: aboutFlash 2s ease;
+}
+
+@keyframes aboutFlash {
+    0% {
+        transform: scale(0.99);
+        box-shadow: 0 0 0 0 rgba(255, 123, 110, 0.55);
+    }
+    35% {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 12px rgba(255, 123, 110, 0.3), 0 24px 50px rgba(255, 123, 110, 0.35);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 123, 110, 0);
+    }
+}
+
 .booking-btn {
     display: inline-block;
     margin-top: 12px;
-    border: 1px solid var(--gold);
+    border: 1px solid var(--accent);
     padding: 8px 14px;
     border-radius: 8px;
     font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.booking-btn:hover,
+.careers-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(209, 130, 123, 0.28);
+}
+
+.careers-section {
+    display: grid;
+    gap: 14px;
+    margin: 0 18px 24px;
+    padding: 16px;
+}
+
+.careers-content p {
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.team-groups {
+    margin-top: 14px;
+}
+
+.team-groups h3 {
+    margin: 14px 0 8px;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.team-groups ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.team-groups li + li {
+    margin-top: 6px;
+}
+
+.careers-btn {
+    display: inline-block;
+    margin-top: 14px;
+    border: 1px solid var(--accent);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.careers-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+}
+
+.careers-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--accent-soft);
 }
 
 .mobile-footer {
@@ -203,8 +323,43 @@ a {
     display: flex;
     justify-content: space-around;
     padding: 12px;
-    background: rgba(10, 10, 10, 0.98);
-    border-top: 1px solid var(--gold-soft);
+    background: rgba(253, 250, 246, 0.98);
+    border-top: 1px solid var(--line);
+}
+
+.mobile-footer a {
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.mobile-footer a:hover {
+    background: #f8e3de;
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.desktop-nav a {
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.desktop-nav a:hover {
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.menu-toggle:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(209, 130, 123, 0.28);
+}
+
+.booking-btn:active,
+.careers-btn:active,
+.menu-toggle:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 @media (min-width: 992px) {
@@ -236,5 +391,24 @@ a {
     .info-sections {
         grid-template-columns: repeat(2, minmax(260px, 1fr));
         padding: 0 24px 24px;
+    }
+
+    .about-section {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-section {
+        grid-template-columns: 1fr;
+    }
+
+    .careers-section {
+        grid-template-columns: minmax(300px, 1fr) minmax(320px, 1fr);
+        align-items: stretch;
+        margin: 0 24px 32px;
+        padding: 18px;
+    }
+
+    .careers-image img {
+        min-height: 280px;
     }
 }

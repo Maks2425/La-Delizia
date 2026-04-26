@@ -1,21 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
-
-from flask_login import login_required, current_user, login_user, logout_user # pip install flask-login
-
-from LaDelizia_db import Session, Users, Menu, Orders, Reservation
-from flask_login import LoginManager
-from datetime import datetime
-
-import os
-import uuid
 import json
+import os
 import random
-
 import secrets
 
-app = Flask(__name__)
+from flask import Flask, flash, redirect, render_template, request, send_file, session, url_for
+from flask_login import LoginManager, login_required, login_user, logout_user
 
-FILES_PATH = 'static/menu'
+from LaDelizia_db import Session, Users
+
+app = Flask(__name__)
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['MAX_FORM_MEMORY_SIZE'] = 1024 * 1024  # 1MB
@@ -31,16 +24,30 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    with Session() as session:
-        user = session.query(Users).filter_by(id = user_id).first()
-        if user:
-            return user
+    with Session() as db_session:
+        return db_session.query(Users).filter_by(id=user_id).first()
+
+
+def ensure_csrf_token():
+    if "csrf_token" not in session:
+        session["csrf_token"] = secrets.token_hex(16)
+    return session["csrf_token"]
+
+
+def is_valid_csrf():
+    return request.form.get("csrf_token") == session.get("csrf_token")
+
+
+def send_project_image(filename):
+    image_path = os.path.join(app.root_path, filename)
+    return send_file(image_path, mimetype="image/png")
 
 @app.after_request
 def apply_csp(response):
-    nonce = secrets.token_urlsafe(16)  # Генеруємо випадковий nonce для дозволених скриптів
+    nonce = secrets.token_urlsafe(16)
     csp = (
         f"default-src 'self'; "
+        f"img-src 'self' https: data:; "
         f"script-src 'self' 'nonce-{nonce}'; "
         f"style-src 'self'; "
         f"frame-ancestors 'none'; "
@@ -54,8 +61,7 @@ def apply_csp(response):
 @app.route('/')
 @app.route('/home')
 def home():
-    if "csrf_token" not in session:
-        session["csrf_token"] = secrets.token_hex(16)
+    ensure_csrf_token()
 
     dishes = load_dishes_from_json()
     reviews = generate_random_reviews(6)
@@ -67,23 +73,53 @@ def home():
     )
 
 
-def load_dishes_from_json():
+@app.route('/menu')
+def menu_page():
+    ensure_csrf_token()
+    menu_categories = load_menu_categories_from_json()
+    return render_template('menu.html', menu_categories=menu_categories)
+
+
+def normalize_category_name(raw_name):
+    return raw_name.replace("_", " ").title()
+
+
+def load_menu_categories_from_json():
     with open('menu.json', 'r', encoding='utf-8') as file:
         menu_data = json.load(file)
 
-    dishes = []
     categories = menu_data.get('menu', {})
+    menu_categories = []
 
-    for category_items in categories.values():
+    for category_name, category_items in categories.items():
+        normalized_name = normalize_category_name(category_name)
+        dishes = []
+
         for dish in category_items:
             dishes.append(
                 {
                     "name": dish.get("name", "Dish"),
                     "description": dish.get("description", ""),
                     "price": dish.get("price", 0),
-                    "image": dish.get("image", "")
+                    "image": dish.get("image", ""),
                 }
             )
+
+        menu_categories.append(
+            {
+                "key": category_name,
+                "title": normalized_name,
+                "dishes": dishes,
+            }
+        )
+
+    return menu_categories
+
+
+def load_dishes_from_json():
+    dishes = []
+    for category in load_menu_categories_from_json():
+        dishes.extend(category["dishes"])
 
     return dishes
 
@@ -117,42 +153,55 @@ def generate_random_reviews(count):
 
 @app.route('/pic.png')
 def restaurant_image():
-    return send_file('pic.png', mimetype='image/png')
+    return send_project_image("pic.png")
+
+@app.route('/collective.png')
+def collective_image():
+    return send_project_image("collective.png")
 
 @app.route("/register", methods = ['GET','POST'])
 def register():
+    ensure_csrf_token()
+
     if request.method == 'POST':
-        if request.form.get("csrf_token") != session["csrf_token"]:
+        if not is_valid_csrf():
             return "Запит заблоковано!", 403
+
         nickname = request.form['nickname']
         email = request.form['email']
         password = request.form['password']
 
-        with Session() as cursor:
-            if cursor.query(Users).filter_by(email=email).first() or cursor.query(Users).filter_by(nickname = nickname).first():
+        with Session() as db_session:
+            email_exists = db_session.query(Users).filter_by(email=email).first()
+            nickname_exists = db_session.query(Users).filter_by(nickname=nickname).first()
+
+            if email_exists or nickname_exists:
                 flash('Користувач з таким email або нікнеймом вже існує!', 'danger')
-                return render_template('register.html',csrf_token=session["csrf_token"])
+                return render_template('register.html', csrf_token=session["csrf_token"])
 
             new_user = Users(nickname=nickname, email=email)
             new_user.set_password(password)
-            cursor.add(new_user)
-            cursor.commit()
-            cursor.refresh(new_user)
+            db_session.add(new_user)
+            db_session.commit()
+            db_session.refresh(new_user)
             login_user(new_user)
             return redirect(url_for('home'))
-    return render_template('register.html',csrf_token=session["csrf_token"])
+
+    return render_template('register.html', csrf_token=session["csrf_token"])
 
 @app.route("/login", methods = ["GET","POST"])
 def login():
+    ensure_csrf_token()
+
     if request.method == 'POST':
-        if request.form.get("csrf_token") != session["csrf_token"]:
+        if not is_valid_csrf():
             return "Запит заблоковано!", 403
 
         nickname = request.form['nickname']
         password = request.form['password']
 
-        with Session() as cursor:
-            user = cursor.query(Users).filter_by(nickname = nickname).first()
+        with Session() as db_session:
+            user = db_session.query(Users).filter_by(nickname=nickname).first()
             if user and user.check_password(password):
                 login_user(user)
                 return redirect(url_for('home'))

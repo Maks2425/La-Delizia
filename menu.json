@@ -20,13 +20,13 @@
           "name": "Margherita",
           "description": "Томатний соус, моцарела, базилік",
           "price": 100,
-          "image": "https://images.unsplash.com/photo-1601924928376-59c1a3f0c0b0?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80"
         },
         {
           "name": "Quattro Formaggi",
           "description": "Чотири види сиру: моцарела, горгонзола, пармезан, рікота",
           "price": 130,
-          "image": "https://images.unsplash.com/photo-1548365328-8b849f6a1d2e?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=800&q=80"
         }
       ],
       "main_dishes": [
@@ -34,13 +34,13 @@
           "name": "Lasagna",
           "description": "Класична лазанья з м'ясом і соусом бешамель",
           "price": 140,
-          "image": "https://images.unsplash.com/photo-1604908177522-040f1c6f2c7a?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1619895092538-128341789043?auto=format&fit=crop&w=800&q=80"
         },
         {
           "name": "Chicken Parmigiana",
           "description": "Куряче філе з томатним соусом і сиром пармезан",
           "price": 150,
-          "image": "https://images.unsplash.com/photo-1617196038435-2f3c6f9b8b87?auto=format&fit=crop&w=800&q=80"
+          "image": "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=800&q=80"
         }
       ],
       "desserts": [
