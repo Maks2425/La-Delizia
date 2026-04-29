@@ -11,17 +11,17 @@
     <button class="menu-toggle" id="menuToggle">МЕНЮ</button>
     <nav class="desktop-nav">
         <a href="{{ url_for('menu_page') }}">МЕНЮ</a>
-        <a href="#booking">БРОНЮВАННЯ</a>
+        <a href="{{ url_for('booking_tables_page') }}">БРОНЮВАННЯ</a>
         <a href="#home" class="brand">LaDelizia</a>
         <a href="#about">ПРО НАС</a>
         <a href="#careers">ВАКАНСІЇ</a>
-        <a href="/logout">ВИЙТИ</a>
+        <a href="/logout">Ввійти</a>
     </nav>
 </header>
 
 <nav class="mobile-nav" id="mobileNav">
     <a href="{{ url_for('menu_page') }}">МЕНЮ</a>
-    <a href="#booking">БРОНЮВАННЯ</a>
+    <a href="{{ url_for('booking_tables_page') }}">БРОНЮВАННЯ</a>
     <a href="#about">ПРО НАС</a>
     <a href="#careers">ВАКАНСІЇ</a>
     <a href="/logout">ВИЙТИ</a>
@@ -66,7 +66,7 @@
     <article id="booking" class="panel info-card">
         <h2>Бронювання</h2>
         <p>Забронюйте стіл заздалегідь для найкращого вечора у LaDelizia.</p>
-        <a class="booking-btn" href="/login">Забронювати</a>
+        <a class="booking-btn" href="{{ url_for('booking_tables_page') }}">Забронювати</a>
     </article>
 </section>
 
@@ -131,7 +131,7 @@
 
 <footer class="mobile-footer">
     <a href="#about">Про нас</a>
-    <a href="#booking">Бронювання</a>
+    <a href="{{ url_for('booking_tables_page') }}">Бронювання</a>
     <a href="#careers">Вакансії</a>
 </footer>
 

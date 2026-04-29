@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>LaDelizia | Вибір столика</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='booking_tables.css') }}">
+</head>
+<body>
+<header class="booking-header">
+    <a class="back-link" href="{{ url_for('home') }}">← На головну</a>
+    <h1>Оберіть столик</h1>
+</header>
+
+<main class="booking-layout">
+    <section class="panel booking-time">
+        <h2>Оберіть час</h2>
+        <select id="timeSelect" class="time-select">
+            {% for slot in time_slots %}
+            <option value="{{ slot }}" {% if slot == selected_time %}selected{% endif %}>{{ slot }}</option>
+            {% endfor %}
+        </select>
+    </section>
+
+    <section class="table-map panel" id="tableMap">
+        <div class="hall-label">ВХІД</div>
+        {% for table_id in table_ids %}
+        <button
+            type="button"
+            class="table-seat{% if table_id in reserved_tables %} is-reserved{% endif %}{% if table_id == selected_table %} is-selected{% endif %}"
+            data-table-id="{{ table_id }}"
+            {% if table_id in reserved_tables %}disabled{% endif %}
+        >
+            Стіл {{ table_id }}
+        </button>
+        {% endfor %}
+        <div class="hall-label hall-label-bottom">КУХНЯ</div>
+    </section>
+
+    <section class="panel booking-info">
+        <h2>Стан столиків</h2>
+        <p><span class="dot free"></span> Вільний</p>
+        <p><span class="dot reserved"></span> Зайнятий</p>
+        <p><span class="dot selected"></span> Ваш вибір</p>
+        <button id="confirmTableBtn" class="confirm-btn" type="button" disabled>Підтвердити столик</button>
+    </section>
+</main>
+
+<script>
+    window.bookingInitialTable = {{ selected_table if selected_table else 'null' }};
+    window.bookingInitialTime = "{{ selected_time }}";
+    window.bookingReservedBySlot = {{ reserved_by_slot|tojson }};
+</script>
+<script src="{{ url_for('static', filename='booking_tables.js') }}"></script>
+</body>
+</html>

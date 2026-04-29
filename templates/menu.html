@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaDelizia | Меню</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>LaDelizia | {{ page_title or 'Меню' }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
 </head>
-<body>
+<body
+    data-user-authenticated="{{ 'true' if current_user.is_authenticated else 'false' }}"
+    data-checkout-endpoint="{{ checkout_endpoint or url_for('checkout') }}"
+>
 <header class="menu-header">
-    <a class="back-link" href="{{ url_for('home') }}">← На головну</a>
-    <h1>Меню LaDelizia</h1>
+    <a class="back-link" href="{{ back_url or url_for('home') }}">← Назад</a>
+    <h1>{{ page_title or 'Меню LaDelizia' }}</h1>
+    <button class="cart-toggle" id="cartToggle" type="button" aria-label="Відкрити кошик">
+        🛒 <span id="cartCount">0</span>
+    </button>
 </header>
+
+<aside class="cart-drawer panel" id="cartDrawer" aria-hidden="true">
+    <h2>Ваш кошик</h2>
+    <div id="cartItems" class="cart-items">
+        <p class="cart-empty">Кошик порожній</p>
+    </div>
+    <div class="cart-footer">
+        <p>Сума: <strong id="cartTotal">0 грн</strong></p>
+        <button id="checkoutBtn" class="checkout-btn" type="button">Замовити їжу</button>
+    </div>
+</aside>
 
 <main class="menu-layout">
     <section class="menu-list panel">

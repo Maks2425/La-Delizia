@@ -28,6 +28,26 @@ body {
     padding: 18px;
 }
 
+.cart-toggle {
+    margin-left: auto;
+    position: fixed;
+    top: 14px;
+    right: 18px;
+    border: 1px solid var(--accent-soft);
+    background: #fff;
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    z-index: 1100;
+}
+
+.cart-toggle-hit {
+    animation: cartGlowHit 1.35s ease;
+}
+
 .back-link {
     color: var(--accent);
     text-decoration: none;
@@ -121,6 +141,7 @@ body {
     border: 1px solid var(--accent-soft);
     color: var(--accent);
     background: #fff;
+    transition: box-shadow 0.16s ease, background-color 0.16s ease;
 }
 
 .dish-preview {
@@ -156,6 +177,172 @@ body {
 .preview-info span {
     font-weight: 700;
     color: var(--accent);
+}
+
+.cart-toast {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    background: var(--text);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(12px);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+.cart-toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cart-drawer {
+    position: fixed;
+    right: 18px;
+    top: 62px;
+    width: min(340px, calc(100% - 36px));
+    padding: 14px;
+    z-index: 999;
+    display: none;
+}
+
+.cart-drawer-open {
+    display: block;
+}
+
+.cart-drawer h2 {
+    margin-bottom: 10px;
+    color: var(--accent);
+}
+
+.cart-items {
+    max-height: 260px;
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px;
+    background: #fff9f7;
+}
+
+.cart-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 4px;
+    border-bottom: 1px solid var(--line);
+}
+
+.cart-row-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-minus-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--accent-soft);
+    background: #fff;
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cart-row:last-child {
+    border-bottom: none;
+}
+
+.cart-empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 12px 0;
+}
+
+.cart-footer {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.checkout-btn {
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .cart-toggle {
+        top: 10px;
+        right: 10px;
+    }
+
+    .cart-drawer {
+        right: 10px;
+        top: 56px;
+    }
+}
+
+.fly-plus-token {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    box-shadow: 0 14px 36px rgba(209, 130, 123, 0.65);
+    pointer-events: none;
+    z-index: 1200;
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+}
+
+.fly-plus-token-active {
+    opacity: 1;
+    transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.18, 1), opacity 1.35s ease;
+    transform: translate(var(--fly-x), var(--fly-y)) scale(0.22);
+}
+
+@keyframes cartGlowHit {
+    0% {
+        box-shadow: 0 0 0 0 rgba(209, 130, 123, 0);
+        transform: scale(1);
+    }
+    25% {
+        box-shadow: 0 0 0 10px rgba(209, 130, 123, 0.28);
+        background: #ffe9e5;
+        transform: scale(1.07);
+    }
+    55% {
+        box-shadow: 0 0 0 18px rgba(209, 130, 123, 0.4);
+        background: #ffdcd5;
+        transform: scale(1.12);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(209, 130, 123, 0);
+        transform: scale(1);
+    }
 }
 
 @media (min-width: 992px) {
