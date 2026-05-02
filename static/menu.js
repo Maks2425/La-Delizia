@@ -6,6 +6,8 @@ const previewPrice = document.getElementById("previewPrice");
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
 const isAuthenticated = document.body.dataset.userAuthenticated === "true";
 const checkoutEndpoint = document.body.dataset.checkoutEndpoint || "/api/checkout";
+const requireAuthCheckout = document.body.dataset.requireAuthCheckout === "true";
+const isCartEnabled = document.body.dataset.enableCart === "true";
 const guestCartStorageKey = "ladelizia_guest_cart";
 const cartToggle = document.getElementById("cartToggle");
 const cartDrawer = document.getElementById("cartDrawer");
@@ -148,6 +150,9 @@ function getDishFromButton(button) {
 }
 
 async function saveCart() {
+    if (!isCartEnabled) {
+        return;
+    }
     if (!isAuthenticated) {
         localStorage.setItem(guestCartStorageKey, JSON.stringify(cartItems));
         return;
@@ -168,6 +173,10 @@ async function saveCart() {
 }
 
 async function loadCart() {
+    if (!isCartEnabled) {
+        cartItems = [];
+        return;
+    }
     if (!isAuthenticated) {
         const raw = localStorage.getItem(guestCartStorageKey);
         try {
@@ -206,12 +215,15 @@ async function addDishToCart(button, plusElement) {
 }
 
 async function checkoutOrder() {
+    if (!isCartEnabled) {
+        return;
+    }
     if (cartItems.length === 0) {
         alert("Кошик порожній.");
         return;
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && requireAuthCheckout) {
         window.location.href = "/login";
         return;
     }
@@ -256,7 +268,9 @@ dishItems.forEach((item) => {
     });
 });
 
-loadCart().then(renderCart);
+if (isCartEnabled) {
+    loadCart().then(renderCart);
+}
 
 if (cartToggle && cartDrawer) {
     cartToggle.addEventListener("click", () => {

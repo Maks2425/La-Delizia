@@ -21,21 +21,20 @@
             <option value="{{ slot }}" {% if slot == selected_time %}selected{% endif %}>{{ slot }}</option>
             {% endfor %}
         </select>
+        <div id="timeSlotsHints" class="time-slots-hints"></div>
     </section>
 
     <section class="table-map panel" id="tableMap">
-        <div class="hall-label">ВХІД</div>
         {% for table_id in table_ids %}
         <button
             type="button"
-            class="table-seat{% if table_id in reserved_tables %} is-reserved{% endif %}{% if table_id == selected_table %} is-selected{% endif %}"
+            class="table-seat{% if table_id in reserved_tables %} is-reserved{% else %} is-free{% endif %}{% if table_id == selected_table %} is-selected{% endif %}"
             data-table-id="{{ table_id }}"
-            {% if table_id in reserved_tables %}disabled{% endif %}
+            aria-disabled="{{ 'true' if table_id in reserved_tables else 'false' }}"
         >
             Стіл {{ table_id }}
         </button>
         {% endfor %}
-        <div class="hall-label hall-label-bottom">КУХНЯ</div>
     </section>
 
     <section class="panel booking-info">

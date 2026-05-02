@@ -10,15 +10,20 @@
 <body
     data-user-authenticated="{{ 'true' if current_user.is_authenticated else 'false' }}"
     data-checkout-endpoint="{{ checkout_endpoint or url_for('checkout') }}"
+    data-require-auth-checkout="{{ 'true' if require_auth_checkout else 'false' }}"
+    data-enable-cart="{{ 'true' if enable_cart else 'false' }}"
 >
 <header class="menu-header">
     <a class="back-link" href="{{ back_url or url_for('home') }}">← Назад</a>
     <h1>{{ page_title or 'Меню LaDelizia' }}</h1>
+    {% if enable_cart %}
     <button class="cart-toggle" id="cartToggle" type="button" aria-label="Відкрити кошик">
         🛒 <span id="cartCount">0</span>
     </button>
+    {% endif %}
 </header>
 
+{% if enable_cart %}
 <aside class="cart-drawer panel" id="cartDrawer" aria-hidden="true">
     <h2>Ваш кошик</h2>
     <div id="cartItems" class="cart-items">
@@ -29,6 +34,7 @@
         <button id="checkoutBtn" class="checkout-btn" type="button">Замовити їжу</button>
     </div>
 </aside>
+{% endif %}
 
 <main class="menu-layout">
     <section class="menu-list panel">
@@ -51,7 +57,9 @@
                         <p>{{ dish.description }}</p>
                         <span>{{ dish.price }} грн</span>
                     </div>
+                    {% if enable_cart %}
                     <span class="dish-plus" aria-hidden="true">+</span>
+                    {% endif %}
                 </button>
                 {% endfor %}
             </div>
