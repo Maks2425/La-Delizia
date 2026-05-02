@@ -95,8 +95,11 @@ def load_user(user_id):
     if user_id and str(user_id).startswith("local_"):
         nickname = str(user_id).replace("local_", "", 1)
         return find_local_user_by_nickname(nickname)
-    with Session() as db_session:
-        return db_session.query(Users).filter_by(id=user_id).first()
+    try:
+        with Session() as db_session:
+            return db_session.query(Users).filter_by(id=user_id).first()
+    except Exception:
+        return None
 
 
 def ensure_csrf_token():

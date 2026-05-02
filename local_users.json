@@ -1,0 +1,6 @@
+{
+  "Maksym": {
+    "email": "maksymmatiishyn1@gmail.com",
+    "password_hash": "scrypt:32768:8:1$43ddPZvvuWKZSay2$09910f8f8750ed0a27ef9d15f9ad9772e2376dedfdb60261734dfca3cf271eb22b29f9c641694ff02af65c0bab39a209a1e1db83779b6e211b55482d7baf305f"
+  }
+}

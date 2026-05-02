@@ -15,7 +15,11 @@
         <a href="#home" class="brand">LaDelizia</a>
         <a href="#about">ПРО НАС</a>
         <a href="#careers">ВАКАНСІЇ</a>
-        <a href="/logout">Ввійти</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}">{{ current_user.nickname }}</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Ввійти</a>
+        {% endif %}
     </nav>
 </header>
 
@@ -24,7 +28,11 @@
     <a href="{{ url_for('booking_tables_page') }}">БРОНЮВАННЯ</a>
     <a href="#about">ПРО НАС</a>
     <a href="#careers">ВАКАНСІЇ</a>
-    <a href="/logout">ВИЙТИ</a>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('logout') }}">{{ current_user.nickname }} (ВИЙТИ)</a>
+    {% else %}
+    <a href="{{ url_for('login') }}">ВВІЙТИ</a>
+    {% endif %}
 </nav>
 
 <main class="layout" id="home">
