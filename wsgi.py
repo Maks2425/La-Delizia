@@ -1,0 +1,2 @@
+from LaDelizia import app
+

@@ -30,14 +30,23 @@ TABLE_COUNT = 12
 TIME_SLOTS = ["17:00", "18:00", "19:00", "20:00", "21:00"]
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini"
+IS_PRODUCTION = os.getenv("FLASK_ENV", "development").lower() == "production"
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['MAX_FORM_MEMORY_SIZE'] = 1024 * 1024  # 1MB
 app.config['MAX_FORM_PARTS'] = 500
 
 app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
+app.config["SESSION_COOKIE_SECURE"] = os.getenv(
+    "SESSION_COOKIE_SECURE",
+    "1" if IS_PRODUCTION else "0",
+) == "1"
 
-app.config['SECRET_KEY'] = '#cv)3v7w$*s3fk;5c!@y0?:?№3"9)#'
+app.config["SECRET_KEY"] = (
+    os.getenv("SECRET_KEY")
+    or os.getenv("FLASK_SECRET_KEY")
+    or "dev-insecure-secret-change-me"
+)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -770,4 +779,8 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(
+        host=os.getenv("HOST", "0.0.0.0"),
+        port=int(os.getenv("PORT", "5000")),
+        debug=os.getenv("FLASK_DEBUG", "0") == "1",
+    )
