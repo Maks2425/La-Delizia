@@ -41,5 +41,28 @@ function initAboutHighlight() {
     });
 }
 
+function initCareersHighlight() {
+    const careersSection = document.getElementById("careers");
+    const careersLinks = document.querySelectorAll('a[href="#careers"]');
+
+    if (!careersSection || careersLinks.length === 0) {
+        return;
+    }
+
+    careersLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            careersSection.classList.remove("careers-flash");
+            // Force reflow so animation can restart on repeated clicks.
+            void careersSection.offsetWidth;
+            careersSection.classList.add("careers-flash");
+
+            setTimeout(() => {
+                careersSection.classList.remove("careers-flash");
+            }, ABOUT_FLASH_DURATION_MS);
+        });
+    });
+}
+
 initMobileMenu();
 initAboutHighlight();
+initCareersHighlight();

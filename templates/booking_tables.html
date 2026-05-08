@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>LaDelizia | Вибір столика</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='booking_tables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ai_chat.css') }}">
 </head>
 <body>
 <header class="booking-header">
@@ -46,11 +47,27 @@
     </section>
 </main>
 
+<button id="aiChatToggle" class="ai-chat-toggle" type="button" aria-label="Відкрити чат-помічник">AI</button>
+<section id="aiChatPanel" class="ai-chat-panel" aria-hidden="true">
+    <header class="ai-chat-header">
+        <h3>AI помічник LaDelizia</h3>
+        <button id="aiChatClose" type="button" class="ai-chat-close" aria-label="Закрити чат">×</button>
+    </header>
+    <div id="aiChatMessages" class="ai-chat-messages">
+        <div class="ai-msg ai-msg-bot">Вітаю! Питайте про страви, ціни, бронювання або ресторан.</div>
+    </div>
+    <form id="aiChatForm" class="ai-chat-form">
+        <input id="aiChatInput" type="text" placeholder="Ваше питання..." maxlength="300" required>
+        <button type="submit">Надіслати</button>
+    </form>
+</section>
+
 <script>
     window.bookingInitialTable = {{ selected_table if selected_table else 'null' }};
     window.bookingInitialTime = "{{ selected_time }}";
     window.bookingReservedBySlot = {{ reserved_by_slot|tojson }};
 </script>
 <script src="{{ url_for('static', filename='booking_tables.js') }}"></script>
+<script src="{{ url_for('static', filename='ai_chat.js') }}"></script>
 </body>
 </html>

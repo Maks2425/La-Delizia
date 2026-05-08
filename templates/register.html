@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Реєстрація</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ai_chat.css') }}">
 </head>
 <body>
 <header class="auth-header">
@@ -31,5 +33,20 @@
         <a class="alt-link" href="{{ url_for('login') }}">Вже маєте акаунт? Увійти</a>
     </section>
 </main>
+<button id="aiChatToggle" class="ai-chat-toggle" type="button" aria-label="Відкрити чат-помічник">AI</button>
+<section id="aiChatPanel" class="ai-chat-panel" aria-hidden="true">
+    <header class="ai-chat-header">
+        <h3>AI помічник LaDelizia</h3>
+        <button id="aiChatClose" type="button" class="ai-chat-close" aria-label="Закрити чат">×</button>
+    </header>
+    <div id="aiChatMessages" class="ai-chat-messages">
+        <div class="ai-msg ai-msg-bot">Вітаю! Питайте про страви, ціни, бронювання або ресторан.</div>
+    </div>
+    <form id="aiChatForm" class="ai-chat-form">
+        <input id="aiChatInput" type="text" placeholder="Ваше питання..." maxlength="300" required>
+        <button type="submit">Надіслати</button>
+    </form>
+</section>
+<script src="{{ url_for('static', filename='ai_chat.js') }}"></script>
 </body>
 </html>

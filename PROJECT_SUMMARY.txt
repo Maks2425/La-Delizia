@@ -1,0 +1,66 @@
+Project: La-Delizia
+Date: 2026-05-03
+
+1. Overview
+LaDelizia is a Flask web app for an Italian restaurant with menu browsing, table booking, food ordering, and a built-in AI assistant chat.
+The project uses server-rendered HTML templates plus vanilla JavaScript/CSS for interactive UI.
+It supports authentication through MySQL and has a local JSON fallback mode when DB is unavailable.
+
+2. Architecture
+- Backend: `LaDelizia.py` (main Flask app, routes, booking/cart/order logic, AI chat endpoint), `LaDelizia_db.py` (SQLAlchemy models), `db_config.py` (DB URL from env).
+- Frontend: templates in `templates/` (`home.html`, `menu.html`, `booking_tables.html`, auth pages, success/info pages) and scripts/styles in `static/`.
+- Data storage: MySQL (users/orders/reservations models) + file-based JSON storage for carts/orders/bookings/local auth data.
+
+3. Key Features
+- Home page with restaurant info, reviews, careers section, and CTA blocks.
+- Menu page with categories/dishes and preview panel.
+- Booking flow: choose time slot + table, then open booking-specific menu and checkout.
+- Cart/checkout logic (enabled for booking menu; disabled for plain menu page).
+- Order success page with ordered items and totals.
+- Auth: register/login/logout via DB, with local file fallback (`local_users.json`) if DB errors happen.
+- AI chat widget (floating button + popup) across major pages via `/api/assistant/chat`.
+
+4. Main Routes / Flows
+- Public pages: `/`, `/home`, `/menu`, `/booking/tables`, `/booking/menu`, `/order/success`, `/careers`.
+- Auth routes: `/register`, `/login`, `/logout`.
+- Booking APIs: `/api/booking/select-table`, `/api/booking/checkout`.
+- Cart/order APIs: `/api/cart` (GET/POST), `/api/checkout`.
+- Assistant API: `/api/assistant/chat`.
+- Assets: `/pic.png`, `/collective.png`.
+
+5. Configuration
+- Dependencies in `requirements.txt`: Flask, SQLAlchemy, PyMySQL, python-dotenv, bcrypt, flask-login.
+- DB config from `.env` via `db_config.py`:
+  - `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_DATABASE`.
+- AI config in app env:
+  - `OPENAI_API_KEY` (optional, enables OpenAI responses),
+  - `OPENAI_MODEL` (optional, default `gpt-4o-mini`).
+- Security/config highlights: session secret key, CSRF token checks for most mutating endpoints, CSP header in `after_request`.
+
+6. How To Run
+- Install dependencies:
+  - `pip install -r requirements.txt`
+- Prepare environment:
+  - copy `.env.example` to `.env` and set DB credentials if using MySQL.
+  - optionally add `OPENAI_API_KEY` and `OPENAI_MODEL`.
+- Start app:
+  - `python LaDelizia.py`
+- Open in browser:
+  - `http://127.0.0.1:5000`
+
+7. Quick Test Plan
+- Open home page and verify nav, about/careers animations, and AI widget visibility.
+- Test booking: choose time and table, continue to booking menu, place order, verify success page.
+- Test menu page: verify browsing works and cart add/checkout is disabled on plain `/menu`.
+- Test auth:
+  - with DB available: register/login/logout.
+  - with DB unavailable: ensure local fallback login/register still works.
+- Test AI chat:
+  - ask about menu items/prices, booking, and restaurant address.
+  - with and without `OPENAI_API_KEY`, verify fallback behavior.
+
+8. Risks / Gaps
+- Data is split across DB and multiple JSON files; consistency rules are minimal.
+- AI endpoint currently has relaxed CSRF protection to avoid false 403 for chat.
+- Some duplicate template/static path variants exist in file listing (mixed slash style), which can confuse maintenance.
+- No automated tests; verification is manual.

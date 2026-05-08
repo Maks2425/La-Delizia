@@ -2,6 +2,8 @@ import json
 import os
 import random
 import secrets
+import urllib.error
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -11,6 +13,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from LaDelizia_db import Session, Users
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # If python-dotenv is not installed, standard environment variables still work.
+    pass
+
 app = Flask(__name__)
 CARTS_DIR = Path(app.root_path) / "carts"
 ORDERS_DIR = Path(app.root_path) / "orders"
@@ -19,6 +28,8 @@ TABLES_STATE_FILE = BOOKING_DIR / "tables.json"
 LOCAL_USERS_FILE = Path(app.root_path) / "local_users.json"
 TABLE_COUNT = 12
 TIME_SLOTS = ["17:00", "18:00", "19:00", "20:00", "21:00"]
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip() or "gpt-4o-mini"
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['MAX_FORM_MEMORY_SIZE'] = 1024 * 1024  # 1MB
@@ -145,6 +156,12 @@ def home():
         dishes=dishes,
         reviews=reviews
     )
+
+
+@app.route('/careers')
+def careers_page():
+    ensure_csrf_token()
+    return render_template("careers_unavailable.html", csrf_token=session["csrf_token"])
 
 
 @app.route('/menu')
@@ -391,6 +408,132 @@ def load_dishes_from_json():
     return dishes
 
 
+def _normalize_text(text):
+    return " ".join(str(text).lower().strip().split())
+
+
+def build_restaurant_context():
+    menu_categories = load_menu_categories_from_json()
+    menu_lines = []
+    for category in menu_categories:
+        category_title = str(category.get("title", "")).strip()
+        dish_lines = []
+        for dish in category.get("dishes", []):
+            dish_name = str(dish.get("name", "")).strip()
+            dish_price = dish.get("price", 0)
+            dish_description = str(dish.get("description", "")).strip()
+            if dish_name:
+                dish_lines.append(f"- {dish_name} ({dish_price} грн): {dish_description}")
+        if dish_lines:
+            menu_lines.append(f"{category_title}:\n" + "\n".join(dish_lines))
+
+    return (
+        "Ти AI-помічник ресторану LaDelizia. Відповідай коротко, привітно, українською.\n"
+        "Що ти знаєш про ресторан:\n"
+        "- Назва: LaDelizia\n"
+        "- Адреса: Івано-Франківськ, вул. Незалежності, 31\n"
+        f"- Часи бронювання: {', '.join(TIME_SLOTS)}\n"
+        "- Можна бронювати столик через сайт.\n\n"
+        "Меню:\n"
+        + "\n\n".join(menu_lines)
+    )
+
+
+def ask_openai_about_restaurant(user_message):
+    if not OPENAI_API_KEY:
+        return None
+
+    payload = {
+        "model": OPENAI_MODEL,
+        "messages": [
+            {"role": "system", "content": build_restaurant_context()},
+            {"role": "user", "content": str(user_message)},
+        ],
+        "temperature": 0.4,
+        "max_tokens": 220,
+    }
+
+    request_data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/chat/completions",
+        data=request_data,
+        method="POST",
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+        },
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=20) as response:
+            response_data = json.loads(response.read().decode("utf-8"))
+            choices = response_data.get("choices", [])
+            if not choices:
+                return None
+            message = choices[0].get("message", {})
+            content = str(message.get("content", "")).strip()
+            return content or None
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError, OSError):
+        return None
+
+
+def build_assistant_reply(raw_message):
+    message = _normalize_text(raw_message)
+    if not message:
+        return "Напишіть ваше питання: про страви, меню, бронювання або ресторан."
+
+    ai_reply = ask_openai_about_restaurant(raw_message)
+    if ai_reply:
+        return ai_reply
+
+    menu_categories = load_menu_categories_from_json()
+    dishes = []
+    for category in menu_categories:
+        for dish in category.get("dishes", []):
+            dishes.append(
+                {
+                    "name": str(dish.get("name", "")),
+                    "description": str(dish.get("description", "")),
+                    "price": dish.get("price", 0),
+                    "category": str(category.get("title", "")),
+                }
+            )
+
+    matched_dish = None
+    for dish in dishes:
+        dish_name = _normalize_text(dish["name"])
+        if dish_name and dish_name in message:
+            matched_dish = dish
+            break
+
+    if any(word in message for word in ["привіт", "добр", "hello", "hi"]):
+        return "Вітаю в LaDelizia! Я допоможу з меню, бронюванням столиків, цінами та інформацією про ресторан."
+
+    if matched_dish:
+        return (
+            f"{matched_dish['name']} ({matched_dish['category']}): "
+            f"{matched_dish['description']}. Ціна: {matched_dish['price']} грн."
+        )
+
+    if any(word in message for word in ["меню", "категор", "що є", "страв"]):
+        category_titles = [category.get("title", "") for category in menu_categories]
+        return "У нас є такі категорії меню: " + ", ".join(category_titles) + ". Можу підказати конкретну страву і ціну."
+
+    if any(word in message for word in ["адрес", "де ви", "локац", "знаходитесь"]):
+        return "Ми знаходимося в Івано-Франківську, вул. Незалежності, 31."
+
+    if any(word in message for word in ["брон", "столик", "резерв"]):
+        return "Для бронювання відкрийте розділ 'БРОНЮВАННЯ', оберіть час і столик. Після цього можна одразу вибрати страви."
+
+    if any(word in message for word in ["час", "графік", "коли ви", "роботи"]):
+        return "Бронювання доступні на вечірні слоти: " + ", ".join(TIME_SLOTS) + "."
+
+    if any(word in message for word in ["контакт", "телефон", "дзвін"]):
+        return "Наразі на сайті немає окремого номера телефону. Можете написати нам через форму/чат або завітати до ресторану."
+
+    return "Я можу допомогти з меню, цінами, описами страв, бронюванням та інформацією про ресторан. Уточніть питання, будь ласка."
+
+
 def generate_random_reviews(count):
     names = [
         "Олександр", "Софія", "Андрій", "Валерія", "Ігор",
@@ -416,6 +559,17 @@ def generate_random_reviews(count):
             }
         )
     return reviews
+
+
+@app.route("/api/assistant/chat", methods=["POST"])
+def assistant_chat():
+    payload = request.get_json(silent=True) or {}
+    message = str(payload.get("message", "")).strip()
+    if not message:
+        return jsonify({"error": "Порожнє повідомлення"}), 400
+
+    reply = build_assistant_reply(message)
+    return jsonify({"reply": reply})
 
 
 @app.route("/api/cart", methods=["GET"])

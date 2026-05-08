@@ -4,43 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <title>LaDelizia | Замовлення оформлено</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='order_success.css') }}">
+    <title>LaDelizia | Вакансії</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='ai_chat.css') }}">
 </head>
 <body>
-<header class="success-header">
+<header class="auth-header">
     <a class="back-link" href="{{ url_for('home') }}">← На головну</a>
-    <h1>Замовлення оформлено</h1>
+    <h1>LaDelizia</h1>
 </header>
 
-<main class="success-layout">
-    <section class="panel success-panel">
-    <p class="meta">Дякуємо! Ось що ви замовили:</p>
-    {% if order["metadata"].get("table_id") and order["metadata"].get("time_slot") %}
-    <p class="meta">Стіл №{{ order["metadata"].get("table_id") }}, час: {{ order["metadata"].get("time_slot") }}</p>
-    {% endif %}
-
-    <ul class="order-list">
-        {% set total_ns = namespace(total=0) %}
-        {% for item in order["items"] %}
-        {% set line_total = (item.price|float) * (item.qty|int) %}
-        {% set total_ns.total = total_ns.total + line_total %}
-        <li class="order-item">
-            <span>{{ item.name }} x{{ item.qty }}</span>
-            <strong>{{ line_total }} грн</strong>
-        </li>
-        {% endfor %}
-    </ul>
-
-    <p class="total">Разом: {{ total_ns.total }} грн</p>
-
-    <div class="actions">
-        <a class="action-btn" href="{{ url_for('home') }}">На головну</a>
-        <a class="action-btn" href="{{ url_for('menu_page') }}">Замовити ще</a>
-    </div>
+<main class="auth-layout">
+    <section class="auth-card panel">
+        <h2>Вакансії</h2>
+        <p>Зараз відкритих вакансій немає.</p>
+        <p>Слідкуйте за оновленнями на сайті — ми обов'язково повідомимо, коли з'являться нові можливості.</p>
+        <a class="alt-link" href="{{ url_for('home') }}">Повернутися на головну</a>
     </section>
 </main>
+
 <button id="aiChatToggle" class="ai-chat-toggle" type="button" aria-label="Відкрити чат-помічник">AI</button>
 <section id="aiChatPanel" class="ai-chat-panel" aria-hidden="true">
     <header class="ai-chat-header">
